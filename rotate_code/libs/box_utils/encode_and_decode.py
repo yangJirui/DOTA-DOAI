@@ -109,8 +109,10 @@ def decode_boxes_rotate(encode_boxes, reference_boxes, scale_factors=None):
     reference_xmin, reference_ymin, reference_xmax, reference_ymax = tf.unstack(reference_boxes, axis=1)
     reference_x_center = (reference_xmin + reference_xmax) / 2.
     reference_y_center = (reference_ymin + reference_ymax) / 2.
-    reference_w = reference_xmax - reference_xmin
-    reference_h = reference_ymax - reference_ymin
+    # reference_w = reference_xmax - reference_xmin
+    # reference_h = reference_ymax - reference_ymin
+    reference_h = reference_xmax - reference_xmin
+    reference_w = reference_ymax - reference_ymin
     reference_theta = tf.ones(tf.shape(reference_xmin)) * -90
     predict_x_center = t_xcenter * reference_w + reference_x_center
     predict_y_center = t_ycenter * reference_h + reference_y_center
@@ -136,8 +138,11 @@ def encode_boxes_rotate(unencode_boxes, reference_boxes, scale_factors=None):
     reference_y_center = (reference_ymin + reference_ymax) / 2.
     # here maybe have logical error, reference_w and reference_h should exchange,
     # but it doesn't seem to affect the result.
-    reference_w = reference_xmax - reference_xmin
-    reference_h = reference_ymax - reference_ymin
+    # reference_w = reference_xmax - reference_xmin
+    # reference_h = reference_ymax - reference_ymin
+    reference_h = reference_xmax - reference_xmin
+    reference_w = reference_ymax - reference_ymin
+
     reference_theta = np.ones(reference_xmin.shape) * -90
     reference_w += 1e-8
     reference_h += 1e-8

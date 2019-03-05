@@ -121,8 +121,8 @@ class_list = ['plane', 'baseball-diamond', 'bridge', 'ground-track-field',
 'small-vehicle', 'large-vehicle', 'ship', 
 'tennis-court', 'basketball-court',  
 'storage-tank', 'soccer-ball-field', 
-'roundabout', 'harbor', 
-'swimming-pool', 'helicopter']
+'turntable', 'harbor',
+'swimming-pool', 'helicopter', 'container-crane']
 
 
 
@@ -130,22 +130,12 @@ class_list = ['plane', 'baseball-diamond', 'bridge', 'ground-track-field',
 def format_label(txt_list):
     format_data = []
     for i in txt_list[2:]:
-        format_data.append(
-        [int(xy) for xy in i.split(' ')[:8]] + [class_list.index(i.split(' ')[8])]
-        # {'x0': int(i.split(' ')[0]),
-        # 'x1': int(i.split(' ')[2]),
-        # 'x2': int(i.split(' ')[4]),
-        # 'x3': int(i.split(' ')[6]),
-        # 'y1': int(i.split(' ')[1]),
-        # 'y2': int(i.split(' ')[3]),
-        # 'y3': int(i.split(' ')[5]),
-        # 'y4': int(i.split(' ')[7]),
-        # 'class': class_list.index(i.split(' ')[8]) if i.split(' ')[8] in class_list else 0, 
-        # 'difficulty': int(i.split(' ')[9])}
-        )
-        if i.split(' ')[8] not in class_list :
+        items = i.strip().split()
+        if items[8].strip() in class_list:
+            format_data.append([int(xy) for xy in items[:8]] + [class_list.index(items[8].strip())])
+        else:
             print ('warning found a new label :', i.split(' ')[8])
-            exit()
+            print (20 * "..Warn..")
     return np.array(format_data)
 
 def clip_image(file_idx, image, boxes_all, width, height, overlap=200):
@@ -196,14 +186,14 @@ def clip_image(file_idx, image, boxes_all, width, height, overlap=200):
                 # idx = np.where(center_y[:]>=0 and center_x[:]>=0 and center_y[:] <= (bottom_right_row - top_left_row) and center_x[:] <= (bottom_right_col - top_left_col))[0]
                 # save_path, im_width, im_height, objects_axis, label_name
                 if len(idx) > 0:
-                    xml = os.path.join(save_dir, 'labeltxt', "%s_%04d_%04d.xml" % (file_idx, top_left_row, top_left_col))
+                    xml = os.path.join(save_dir, 'labeltxt1.5', "%s_%04d_%04d.xml" % (file_idx, top_left_row, top_left_col))
                     save_to_xml(xml, subImage.shape[1], subImage.shape[0], box[idx, :], class_list)
                     # print ('save xml : ', xml)
                     if subImage.shape[0] > 5 and subImage.shape[1] >5:
-                        img_path = os.path.join(save_dir, "images")
+                        img_path = os.path.join(save_dir, "images1.5")
                         if not os.path.exists(img_path):
                             os.makedirs(img_path)
-                        img = os.path.join(save_dir, 'images', "%s_%04d_%04d.png" % (file_idx, top_left_row, top_left_col))
+                        img = os.path.join(save_dir, 'images1.5', "%s_%04d_%04d.png" % (file_idx, top_left_row, top_left_col))
                         cv2.imwrite(img, subImage)
         
     
@@ -211,7 +201,7 @@ def clip_image(file_idx, image, boxes_all, width, height, overlap=200):
 print ('class_list', len(class_list))
 raw_data = '/home/omnisky/DataSets/Dota/val'
 raw_images_dir = os.path.join(raw_data, 'images', 'images')
-raw_label_dir = os.path.join(raw_data, 'labelTxt', 'labelTxt')
+raw_label_dir = os.path.join(raw_data, 'labelTxt_1.5', 'val')
 
 save_dir = '/home/omnisky/DataSets/Dota_clip/trainval800/'
 

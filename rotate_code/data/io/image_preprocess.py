@@ -124,7 +124,7 @@ def random_rgb2gray(img_tensor, gtboxes_and_label):
     return img_tensor
 
 
-def rotate_img_np(img, gtboxes_and_label, r_theta):
+def rotate_img_np_OLD(img, gtboxes_and_label, r_theta):
     h, w, c = img.shape
     center = (w // 2, h // 2)
 
@@ -152,6 +152,32 @@ def rotate_img_np(img, gtboxes_and_label, r_theta):
     # print (valid)
     if np.sum(valid) != 0:
         gtboxes_and_label = gtboxes_and_label[valid]
+    gtboxes_and_label = np.asarray(gtboxes_and_label, dtype=np.int32)
+
+    return rotated_img, gtboxes_and_label
+
+def rotate_img_np(img, gtboxes_and_label, r_theta):
+    h, w, c = img.shape
+    center = (w // 2, h // 2)
+
+    M = cv2.getRotationMatrix2D(center, r_theta, 1.0)
+    cos, sin = np.abs(M[0, 0]), np.abs(M[0, 1])
+    nW, nH = int(h*sin + w*cos), int(h*cos + w*sin)  # new W and new H
+    M[0, 2] += (nW/2) - center[0]
+    M[1, 2] += (nH/2) - center[1]
+    rotated_img = cv2.warpAffine(img, M, (nW, nH))
+    # -------
+
+    new_points_list = []
+    obj_num = len(gtboxes_and_label)
+    for st in range(0, 7, 2):
+        points = gtboxes_and_label[:, st:st+2]
+        expand_points = np.concatenate((points, np.ones(shape=(obj_num, 1))), axis=1)
+        new_points = np.dot(M, expand_points.T)
+        new_points = new_points.T
+        new_points_list.append(new_points)
+    gtboxes = np.concatenate(new_points_list, axis=1)
+    gtboxes_and_label = np.concatenate((gtboxes, gtboxes_and_label[:, -1].reshape(-1, 1)), axis=1)
     gtboxes_and_label = np.asarray(gtboxes_and_label, dtype=np.int32)
 
     return rotated_img, gtboxes_and_label

@@ -190,10 +190,10 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
             #                'soccer-ball-field': 0.3, 'small-vehicle': 0.4, 'ship': 0.35, 'plane': 0.35,
             #                'large-vehicle': 0.4, 'helicopter': 0.4, 'harbor': 0.3, 'ground-track-field': 0.4,
             #                'bridge': 0.3, 'basketball-court': 0.4, 'baseball-diamond': 0.3}
-            h_threshold = {'roundabout': 0.5, 'tennis-court': 0.5, 'swimming-pool': 0.5, 'storage-tank': 0.5,
+            h_threshold = {'turntable': 0.5, 'tennis-court': 0.5, 'swimming-pool': 0.5, 'storage-tank': 0.5,
                            'soccer-ball-field': 0.5, 'small-vehicle': 0.5, 'ship': 0.5, 'plane': 0.5,
                            'large-vehicle': 0.5, 'helicopter': 0.5, 'harbor': 0.5, 'ground-track-field': 0.5,
-                           'bridge': 0.5, 'basketball-court': 0.5, 'baseball-diamond': 0.5}
+                           'bridge': 0.5, 'basketball-court': 0.5, 'baseball-diamond': 0.5, 'container-crane': 0.5}
 
             for sub_class in range(1, cfgs.CLASS_NUM + 1):
                 index = np.where(label_res == sub_class)[0]
@@ -281,7 +281,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
 
 if __name__ == "__main__":
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = cfgs.GPU_GROUP
+    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
     file_paths = get_file_paths_recursive('/home/omnisky/DataSets/Dota/test/images/images', '.png')
     if cfgs.USE_CONCAT:

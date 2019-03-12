@@ -210,8 +210,7 @@ def train():
             if (step > 0 and step % cfgs.SAVE_WEIGHTS_INTE == 0) or (step == cfgs.MAX_ITERATION - 1):
 
                 save_dir = os.path.join(cfgs.TRAINED_CKPT, cfgs.VERSION)
-                if not os.path.exists(save_dir):
-                    os.mkdir(save_dir)
+                tools.mkdir(save_dir)
 
                 save_ckpt = os.path.join(save_dir, 'voc_' + str(global_stepnp) + 'model.ckpt')
                 saver.save(sess, save_ckpt)

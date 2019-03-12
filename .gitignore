@@ -103,7 +103,7 @@ ENV/
 .pyc
 
 # pycharm files
-.idea/*
+*/.idea/*
 
 # vis files
 *.png*

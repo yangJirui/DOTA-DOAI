@@ -199,9 +199,9 @@ def clip_image(file_idx, image, boxes_all, width, height, overlap=200):
     
 
 print ('class_list', len(class_list))
-raw_data = '/home/omnisky/DataSets/Dota/val'
+raw_data = '/home/omnisky/DataSets/Dota/train'
 raw_images_dir = os.path.join(raw_data, 'images', 'images')
-raw_label_dir = os.path.join(raw_data, 'labelTxt_1.5', 'val')
+raw_label_dir = os.path.join(raw_data, 'labelTxt_1.5', 'train')
 
 save_dir = '/home/omnisky/DataSets/Dota_clip/trainval800/'
 

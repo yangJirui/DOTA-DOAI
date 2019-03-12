@@ -11,12 +11,12 @@ from libs.label_name_dict.label_dict import *
 from help_utils.tools import *
 
 tf.app.flags.DEFINE_string('VOC_dir', '/home/omnisky/DataSets/Dota_clip/trainval800/', 'Voc dir')
-tf.app.flags.DEFINE_string('xml_dir', 'labeltxt', 'xml dir')
-tf.app.flags.DEFINE_string('image_dir', 'images', 'image dir')
+tf.app.flags.DEFINE_string('xml_dir', 'labeltxt1.5', 'xml dir')
+tf.app.flags.DEFINE_string('image_dir', 'images1.5', 'image dir')
 tf.app.flags.DEFINE_string('save_name', 'trainval800', 'save name')
 tf.app.flags.DEFINE_string('save_dir', '../tfrecord/', 'save name')
 tf.app.flags.DEFINE_string('img_format', '.png', 'format of image')
-tf.app.flags.DEFINE_string('dataset', 'DOTA', 'dataset')
+tf.app.flags.DEFINE_string('dataset', 'DOTA1.5', 'dataset')
 FLAGS = tf.app.flags.FLAGS
 
 
@@ -76,9 +76,9 @@ def convert_pascal_to_tfrecord():
     save_path = FLAGS.save_dir + FLAGS.dataset + '_' + FLAGS.save_name + '.tfrecord'
     mkdir(FLAGS.save_dir)
 
-    # writer_options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.ZLIB)
-    # writer = tf.python_io.TFRecordWriter(path=save_path, options=writer_options)
-    writer = tf.python_io.TFRecordWriter(path=save_path)
+    writer_options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.ZLIB)
+    writer = tf.python_io.TFRecordWriter(path=save_path, options=writer_options)
+    # writer = tf.python_io.TFRecordWriter(path=save_path)
     for count, xml in enumerate(glob.glob(xml_path + '/*.xml')):
         # to avoid path error in different development platform
         xml = xml.replace('\\', '/')

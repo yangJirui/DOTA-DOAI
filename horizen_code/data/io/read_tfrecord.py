@@ -13,10 +13,10 @@ from libs.configs import cfgs
 
 def read_single_example_and_decode(filename_queue):
 
-    # tfrecord_options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.ZLIB)
+    tfrecord_options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.ZLIB)
 
-    # reader = tf.TFRecordReader(options=tfrecord_options)
-    reader = tf.TFRecordReader()
+    reader = tf.TFRecordReader(options=tfrecord_options)
+    # reader = tf.TFRecordReader()
     _, serialized_example = reader.read(filename_queue)
 
     features = tf.parse_single_example(
@@ -88,7 +88,7 @@ def next_batch(dataset_name, batch_size, shortside_len, is_training):
     '''
     assert batch_size == 1, "we only support batch_size is 1.We may support large batch_size in the future"
 
-    if dataset_name not in ['jyzdata', 'DOTA', 'ship', 'ICDAR2015', 'pascal', 'coco', 'DOTA_TOTAL', 'WIDER']:
+    if dataset_name not in ['jyzdata', 'DOTA', 'DOTA1.5', 'ship', 'ICDAR2015', 'pascal', 'coco', 'DOTA_TOTAL', 'WIDER']:
         raise ValueError('dataSet name must be in pascal, coco spacenet and ship')
 
     if is_training:
@@ -101,7 +101,7 @@ def next_batch(dataset_name, batch_size, shortside_len, is_training):
     filename_tensorlist = tf.train.match_filenames_once(pattern)
     # filename_tensorlist = tf.Print(filename_tensorlist,
     #                                [tf.shape(filename_tensorlist)], summarize=10, message="record_list-->:")
-    filename_queue = tf.train.string_input_producer(filename_tensorlist)
+    filename_queue = tf.train.string_input_producer(filename_tensorlist, )
 
     shortside_len = tf.constant(shortside_len)
     shortside_len = tf.random_shuffle(shortside_len)[0]

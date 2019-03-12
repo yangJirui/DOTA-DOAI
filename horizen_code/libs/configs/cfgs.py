@@ -2,12 +2,14 @@
 from __future__ import division, print_function, absolute_import
 import os
 import tensorflow as tf
-
+'''
+Note :Use train_with_WarmUpAndCosineLr.py
+'''
 # ------------------------------------------------
-VERSION = 'FPN_Res101_rmaskP2_enlarge_NoConcat_800_aug'
-NET_NAME = 'resnet_v1_101'
+VERSION = 'Res101D_fzC1C2_rmaskP2EnlargeConcat_800_MS_WarmUpCosine'
+NET_NAME = 'resnet101_v1d'
 ADD_BOX_IN_TENSORBOARD = True
-USE_CONCAT = False
+USE_CONCAT = True
 CONCAT_CHANNEL = 1024  # 256
 # ---------------------------------------- System_config
 ROOT_PATH = os.path.abspath('../')
@@ -15,7 +17,7 @@ print (20*"++--")
 print (ROOT_PATH)
 GPU_GROUP = "1"
 SHOW_TRAIN_INFO_INTE = 10
-SMRY_ITER = 2000
+SMRY_ITER = 1000
 SAVE_WEIGHTS_INTE = 10000
 
 SUMMARY_PATH = ROOT_PATH + '/output/summary'
@@ -70,19 +72,19 @@ GRADIENT_CLIPPING_BY_NORM = None   # 10.0  if None, will not clip
 EPSILON = 1e-5
 MOMENTUM = 0.9
 LR = 0.001  # 0.001  # 0.0003
-DECAY_STEP = [150000, 220000]  # 50000, 70000
-MAX_ITERATION = 260000
+# DECAY_STEP = [220000, 320000]  # 150000, 220000
+MAX_ITERATION = 750000  # 650000
 
 # -------------------------------------------- Data_preprocess_config
-DATASET_NAME = 'DOTA'  # 'ship', 'spacenet', 'pascal', 'coco'
+DATASET_NAME = 'DOTA1.5'  # 'ship', 'spacenet', 'pascal', 'coco'
 PIXEL_MEAN = [123.68, 116.779, 103.939]  # R, G, B. In tf, channel is RGB. In openCV, channel is BGR
-MXNET_NORM = False
+MXNET_NORM = True
 MXNET_MEAN = [0.485, 0.456, 0.406]  # RGB
 MXNET_STD = [0.229, 0.224, 0.225]
 
-IMG_SHORT_SIDE_LEN = [1200]  # 600  # 600
+IMG_SHORT_SIDE_LEN = [800, 1000, 1200, 600, 400]  # 600  # 600
 IMG_MAX_LENGTH = 1200  # 1000  # 1000
-CLASS_NUM = 15
+CLASS_NUM = 16
 
 # --------------------------------------------- Network_config
 BATCH_SIZE = 1

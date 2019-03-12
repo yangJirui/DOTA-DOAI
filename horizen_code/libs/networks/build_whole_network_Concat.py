@@ -188,7 +188,14 @@ class DetectionNetwork(object):
                                                  activation_fn=None, trainable=self.is_training,
                                                  scope='cls_fc')
 
-                bbox_pred = slim.fully_connected(fc_flatten,
+                # add extra convs for bbox regression
+                bbox_input_feat = pooled_features
+                for i in range(cfgs.ADD_EXTR_CONVS_FOR_REG):
+                    bbox_input_feat = slim.conv2d(bbox_input_feat, num_outputs=256, kernel_size=[3, 3], stride=1,
+                                                  padding="SAME", scope='extra_conv%d' % i)
+                bbox_input_fc_feat = slim.flatten(bbox_input_feat, scope='bbox_feat_flatten')
+
+                bbox_pred = slim.fully_connected(bbox_input_fc_feat,
                                                  num_outputs=(cfgs.CLASS_NUM + 1) * 4,
                                                  weights_initializer=cfgs.BBOX_INITIALIZER,
                                                  activation_fn=None, trainable=self.is_training,

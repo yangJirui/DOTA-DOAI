@@ -6,15 +6,15 @@ import tensorflow as tf
 Note :Use train_with_WarmUpAndCosineLr.py
 '''
 # ------------------------------------------------
-VERSION = 'Res101D_fzC1C2_EsmP2ErfConcat_800_MS_WarmUpCos_GlobalCtx_8conv'
+VERSION = 'Res101D_fzC1C2_rmaskP2EnlargeConcat_800_MS_WarmUpCosine'
 NET_NAME = 'resnet101_v1d'
 ADD_BOX_IN_TENSORBOARD = True
 USE_CONCAT = True
 CONCAT_CHANNEL = 1024  # 256
 
 # -- Some Tricks
-ADD_GLOBAL_CTX = True
-ADD_EXTR_CONVS_FOR_REG = 8  # use 0 to do not use any extra convs
+ADD_GLOBAL_CTX = False
+ADD_EXTR_CONVS_FOR_REG = 0  # use 0 to do not use any extra convs
 
 # ---------------------------------------- System_config
 ROOT_PATH = os.path.abspath('../')

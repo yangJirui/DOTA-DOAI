@@ -11,11 +11,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="cfgs.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cfgs.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/libs/configs/cfgs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="17" column="15" lean-forward="false" selection-start-line="17" selection-start-column="15" selection-end-line="17" selection-end-column="15" />
+            <state relative-caret-position="286">
+              <caret line="79" column="48" lean-forward="false" selection-start-line="79" selection-start-column="48" selection-end-line="79" selection-end-column="48" />
               <folding>
                 <element signature="e#24#88#0" expanded="true" />
               </folding>
@@ -26,61 +26,21 @@
       <file leaf-file-name="train_with_WarmUpAndCosineLr.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tools/train_with_WarmUpAndCosineLr.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="287">
-              <caret line="216" column="0" lean-forward="false" selection-start-line="216" selection-start-column="0" selection-end-line="216" selection-end-column="0" />
+            <state relative-caret-position="243">
+              <caret line="241" column="0" lean-forward="false" selection-start-line="241" selection-start-column="0" selection-end-line="241" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/train.py">
+      <file leaf-file-name="build_whole_network_Concat.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/libs/networks/build_whole_network_Concat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="212" column="37" lean-forward="false" selection-start-line="212" selection-start-column="37" selection-end-line="212" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="train_cocoPretrain.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/train_cocoPretrain.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="212" column="36" lean-forward="false" selection-start-line="212" selection-start-column="36" selection-end-line="212" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="train_with_placeholder.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/train_with_placeholder.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="44">
-              <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+            <state relative-caret-position="375">
+              <caret line="195" column="93" lean-forward="true" selection-start-line="195" selection-start-column="93" selection-end-line="195" selection-end-column="93" />
               <folding>
-                <element signature="e#24#62#0" expanded="true" />
+                <element signature="e#5387#6990#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="inference_pyramid.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tools/inference_pyramid.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4921">
-              <caret line="52" column="5" lean-forward="false" selection-start-line="52" selection-start-column="5" selection-end-line="52" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="label_dict.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/libs/label_name_dict/label_dict.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="71" column="24" lean-forward="false" selection-start-line="71" selection-start-column="9" selection-end-line="71" selection-end-column="24" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -106,15 +66,19 @@
         <option value="$PROJECT_DIR$/data/DOTA/train_crop.py" />
         <option value="$PROJECT_DIR$/data/io/convert_data_to_tfrecord_raw.py" />
         <option value="$PROJECT_DIR$/libs/label_name_dict/label_dict.py" />
-        <option value="$PROJECT_DIR$/libs/networks/resnet_advance.py" />
         <option value="$PROJECT_DIR$/libs/configs/Res101D_fzC1C2_rmaskP2EnlargeConcat_800_MS_WarmUpCosine.py" />
-        <option value="$PROJECT_DIR$/libs/configs/cfgs.py" />
         <option value="$PROJECT_DIR$/data/io/read_tfrecord.py" />
         <option value="$PROJECT_DIR$/tools/train_with_WarmUpAndCosineLr.py" />
         <option value="$PROJECT_DIR$/tools/train.py" />
         <option value="$PROJECT_DIR$/tools/train_cocoPretrain.py" />
         <option value="$PROJECT_DIR$/tools/train_with_placeholder.py" />
         <option value="$PROJECT_DIR$/tools/inference_pyramid.py" />
+        <option value="$PROJECT_DIR$/libs/networks/build_whole_network.py" />
+        <option value="$PROJECT_DIR$/libs/networks/build_whole_network_Concat.py" />
+        <option value="$PROJECT_DIR$/libs/configs/cfgs_baseline_P2mask_EnlargeConcat_MS_WarmCosine.py" />
+        <option value="$PROJECT_DIR$/libs/networks/resnet_advance.py" />
+        <option value="$PROJECT_DIR$/libs/configs/cfgs.py" />
+        <option value="$PROJECT_DIR$/data/io/image_preprocess.py" />
       </list>
     </option>
   </component>
@@ -151,6 +115,22 @@
             <path>
               <item name="horizen_code" type="b2602c69:ProjectViewProjectNode" />
               <item name="horizen_code" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="horizen_code" type="b2602c69:ProjectViewProjectNode" />
+              <item name="horizen_code" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+              <item name="configs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="horizen_code" type="b2602c69:ProjectViewProjectNode" />
+              <item name="horizen_code" type="462c0819:PsiDirectoryNode" />
+              <item name="output" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="horizen_code" type="b2602c69:ProjectViewProjectNode" />
+              <item name="horizen_code" type="462c0819:PsiDirectoryNode" />
               <item name="tools" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -175,7 +155,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.inference_pyramid">
+  <component name="RunManager" selected="Python.train_with_WarmUpAndCosineLr">
     <configuration name="convert_data_to_tfrecord_raw" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -270,8 +250,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.inference_pyramid" />
-        <item index="1" class="java.lang.String" itemvalue="Python.train_with_WarmUpAndCosineLr" />
+        <item index="0" class="java.lang.String" itemvalue="Python.train_with_WarmUpAndCosineLr" />
+        <item index="1" class="java.lang.String" itemvalue="Python.inference_pyramid" />
         <item index="2" class="java.lang.String" itemvalue="Python.convert_data_to_tfrecord_raw" />
         <item index="3" class="java.lang.String" itemvalue="Python.train_crop" />
         <item index="4" class="java.lang.String" itemvalue="Python.find_cat" />
@@ -293,11 +273,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17689331" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37368712" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3260188" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3260188" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -367,25 +348,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
           <caret line="18" column="25" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/io/image_preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="187" column="0" lean-forward="true" selection-start-line="187" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
-          <folding>
-            <element signature="e#4877#5962#0" expanded="false" />
-            <element signature="e#6021#6994#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/libs/networks/resnet_advance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="447">
-          <caret line="292" column="69" lean-forward="false" selection-start-line="292" selection-start-column="69" selection-end-line="292" selection-end-column="69" />
           <folding />
         </state>
       </provider>
@@ -461,29 +423,84 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools/train_with_WarmUpAndCosineLr.py">
+    <entry file="file://$PROJECT_DIR$/tools/inference_pyramid.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="216" column="0" lean-forward="false" selection-start-line="216" selection-start-column="0" selection-end-line="216" selection-end-column="0" />
+        <state relative-caret-position="3395">
+          <caret line="295" column="0" lean-forward="true" selection-start-line="295" selection-start-column="0" selection-end-line="295" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/libs/configs/cfgs.py">
+    <entry file="file://$PROJECT_DIR$/libs/networks/resnet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="17" column="15" lean-forward="false" selection-start-line="17" selection-start-column="15" selection-end-line="17" selection-end-column="15" />
+        <state relative-caret-position="8">
+          <caret line="42" column="4" lean-forward="false" selection-start-line="42" selection-start-column="4" selection-end-line="42" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/configs/cfgs_baseline_P2mask_EnlargeConcat_MS_WarmCosine.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="15" column="22" lean-forward="true" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
           <folding>
             <element signature="e#24#88#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools/inference_pyramid.py">
+    <entry file="file://$PROJECT_DIR$/libs/networks/resnet_advance.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4921">
-          <caret line="52" column="5" lean-forward="false" selection-start-line="52" selection-start-column="5" selection-end-line="52" selection-end-column="5" />
+        <state relative-caret-position="329">
+          <caret line="240" column="35" lean-forward="true" selection-start-line="240" selection-start-column="35" selection-end-line="240" selection-end-column="35" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/networks/build_whole_network.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="194" column="0" lean-forward="false" selection-start-line="194" selection-start-column="0" selection-end-line="194" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/io/image_preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="25" column="31" lean-forward="true" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
+          <folding>
+            <element signature="e#4877#5962#0" expanded="false" />
+            <element signature="e#6021#6994#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/networks/build_whole_network_Concat.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="195" column="93" lean-forward="true" selection-start-line="195" selection-start-column="93" selection-end-line="195" selection-end-column="93" />
+          <folding>
+            <element signature="e#5387#6990#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/train_with_WarmUpAndCosineLr.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="241" column="0" lean-forward="false" selection-start-line="241" selection-start-column="0" selection-end-line="241" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/configs/cfgs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="79" column="48" lean-forward="false" selection-start-line="79" selection-start-column="48" selection-end-line="79" selection-end-column="48" />
+          <folding>
+            <element signature="e#24#88#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

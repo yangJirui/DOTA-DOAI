@@ -4,7 +4,7 @@ import os
 import tensorflow as tf
 
 # ------------------------------------------------
-VERSION = 'DOTA1.5_FPN_Res101D_FreezeC1C2_rmaskP2_Concat_800_aug_MS_8conv_CTX_v2'
+VERSION = 'FPN_Res101D_FreezeC1C2_rmaskP2_Concat_800_aug_MS_8conv_CTX'
 NET_NAME = 'resnet101_v1d'
 ADD_BOX_IN_TENSORBOARD = True
 
@@ -21,7 +21,7 @@ ADD_EXTR_CONVS_FOR_REG = 8  # use 0 to do not use any extra convs
 ROOT_PATH = os.path.abspath('../')
 print (20*"++--")
 print (ROOT_PATH)
-GPU_GROUP = "1"
+GPU_GROUP = "0"
 SHOW_TRAIN_INFO_INTE = 10  # 10
 SMRY_ITER = 1000  # 500
 SAVE_WEIGHTS_INTE = 10000  # 10000
@@ -57,8 +57,8 @@ MASK_TYPE = 'r'  # r or h
 BINARY_MASK = False
 SIGMOID_ON_DOT = False
 MASK_ACT_FET = True  # weather use mask generate 256 channels to dot feat.
-GENERATE_MASK_LIST = ["P2", "P3", "P4"]
-ADDITION_LAYERS = [4, 4, 4]  # add 4 layer to generate P2_mask, 2 layer to generate P3_mask
+GENERATE_MASK_LIST = ["P2"]
+ADDITION_LAYERS = [4]  # add 4 layer to generate P2_mask, 2 layer to generate P3_mask
 ENLAEGE_RF_LIST = ["P3", "P4", "P5"]
 SUPERVISED_MASK_LOSS_WEIGHT = 0.1
 # ------------------------
@@ -78,11 +78,11 @@ GRADIENT_CLIPPING_BY_NORM = None   # 10.0  if None, will not clip
 EPSILON = 1e-5
 MOMENTUM = 0.9
 LR = 0.001  # 0.001  # 0.0003
-DECAY_STEP = [450000, 650000]  # 200000, 300000
-MAX_ITERATION = 800000  # 360000
+DECAY_STEP = [300000, 500000]  # 200000, 300000
+MAX_ITERATION = 700000  # 360000
 
 # -------------------------------------------- Data_preprocess_config
-DATASET_NAME = 'DOTA1.5'  # 'ship', 'spacenet', 'pascal', 'coco'
+DATASET_NAME = 'DOTA'  # 'ship', 'spacenet', 'pascal', 'coco'
 PIXEL_MEAN = [123.68, 116.779, 103.939]  # R, G, B. In tf, channel is RGB. In openCV, channel is BGR
 MXNET_NORM = True
 MXNET_MEAN = [0.485, 0.456, 0.406]  # RGB
@@ -90,7 +90,7 @@ MXNET_STD = [0.229, 0.224, 0.225]
 
 IMG_SHORT_SIDE_LEN = [800, 1000, 1200, 600, 400]  # 600  # 600
 IMG_MAX_LENGTH = 1200  # 1000
-CLASS_NUM = 16
+CLASS_NUM = 15
 
 # --------------------------------------------- Network_config
 BATCH_SIZE = 1
@@ -142,7 +142,7 @@ FAST_RCNN_NMS_MAX_BOXES_PER_CLASS = 1000
 FAST_RCNN_IOU_POSITIVE_THRESHOLD = 0.5
 FAST_RCNN_IOU_NEGATIVE_THRESHOLD = 0.0   # 0.1 < IOU < 0.5 is negative
 FAST_RCNN_MINIBATCH_SIZE = 512  # if is -1, that is train with OHEM
-FAST_RCNN_POSITIVE_RATE = 0.4
+FAST_RCNN_POSITIVE_RATE = 0.25
 
 ADD_GTBOXES_TO_TRAIN = False
 

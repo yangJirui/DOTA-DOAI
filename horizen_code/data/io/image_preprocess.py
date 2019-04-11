@@ -9,6 +9,7 @@ import numpy as np
 import cv2
 from libs.label_name_dict.label_dict import NAME_LABEL_MAP
 
+
 def short_side_resize(img_tensor, gtboxes_and_label, target_shortside_len, max_len=1200):
     '''
 

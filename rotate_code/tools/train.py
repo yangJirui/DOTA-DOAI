@@ -151,7 +151,7 @@ def train():
     )
 
     restorer, restore_ckpt = faster_rcnn.get_restorer()
-    saver = tf.train.Saver(max_to_keep=15)
+    saver = tf.train.Saver(max_to_keep=4)
 
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True

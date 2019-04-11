@@ -2,16 +2,15 @@
 from __future__ import division, print_function, absolute_import
 import os
 import tensorflow as tf
-
+'''
+Note :Use train_with_WarmUpAndCosineLr.py
+'''
 # ------------------------------------------------
-VERSION = 'DOTA1.5_FPN_Res101D_FreezeC1C2_rmaskP2_Concat_800_aug_MS_8conv_CTX_v2'
+VERSION = 'Res101D_fzC1C2_EsmP2ErfConcat_800_MS_WarmUpCos_GlobalCtx_8conv'
 NET_NAME = 'resnet101_v1d'
 ADD_BOX_IN_TENSORBOARD = True
-
-# -------------
 USE_CONCAT = True
 CONCAT_CHANNEL = 1024  # 256
-ROTATE_NMS_USE_GPU = True  # When Train, use GPU NMS, When Test, Use CPU NMS.
 
 # -- Some Tricks
 ADD_GLOBAL_CTX = True
@@ -22,9 +21,9 @@ ROOT_PATH = os.path.abspath('../')
 print (20*"++--")
 print (ROOT_PATH)
 GPU_GROUP = "1"
-SHOW_TRAIN_INFO_INTE = 10  # 10
-SMRY_ITER = 1000  # 500
-SAVE_WEIGHTS_INTE = 10000  # 10000
+SHOW_TRAIN_INFO_INTE = 10
+SMRY_ITER = 1000
+SAVE_WEIGHTS_INTE = 10000
 
 SUMMARY_PATH = ROOT_PATH + '/output/summary'
 TEST_SAVE_PATH = ROOT_PATH + '/tools/test_result'
@@ -57,8 +56,8 @@ MASK_TYPE = 'r'  # r or h
 BINARY_MASK = False
 SIGMOID_ON_DOT = False
 MASK_ACT_FET = True  # weather use mask generate 256 channels to dot feat.
-GENERATE_MASK_LIST = ["P2", "P3", "P4"]
-ADDITION_LAYERS = [4, 4, 4]  # add 4 layer to generate P2_mask, 2 layer to generate P3_mask
+GENERATE_MASK_LIST = ["P2"]
+ADDITION_LAYERS = [4]  # add 4 layer to generate P2_mask, 2 layer to generate P3_mask
 ENLAEGE_RF_LIST = ["P3", "P4", "P5"]
 SUPERVISED_MASK_LOSS_WEIGHT = 0.1
 # ------------------------
@@ -78,8 +77,8 @@ GRADIENT_CLIPPING_BY_NORM = None   # 10.0  if None, will not clip
 EPSILON = 1e-5
 MOMENTUM = 0.9
 LR = 0.001  # 0.001  # 0.0003
-DECAY_STEP = [450000, 650000]  # 200000, 300000
-MAX_ITERATION = 800000  # 360000
+# DECAY_STEP = [220000, 320000]  # 150000, 220000
+MAX_ITERATION = 750000  # 650000
 
 # -------------------------------------------- Data_preprocess_config
 DATASET_NAME = 'DOTA1.5'  # 'ship', 'spacenet', 'pascal', 'coco'
@@ -89,7 +88,7 @@ MXNET_MEAN = [0.485, 0.456, 0.406]  # RGB
 MXNET_STD = [0.229, 0.224, 0.225]
 
 IMG_SHORT_SIDE_LEN = [800, 1000, 1200, 600, 400]  # 600  # 600
-IMG_MAX_LENGTH = 1200  # 1000
+IMG_MAX_LENGTH = 1200  # 1000  # 1000
 CLASS_NUM = 16
 
 # --------------------------------------------- Network_config
@@ -106,7 +105,7 @@ BASE_ANCHOR_SIZE_LIST = [32, 64, 128, 256, 512]  # addjust the base anchor size 
 ANCHOR_STRIDE_LIST = [4, 8, 16, 32, 64]
 ANCHOR_SCALES = [1.0]
 ANCHOR_RATIOS = [0.5, 1., 2.0, 1/4.0, 4.0, 1/6.0, 6.0]
-ROI_SCALE_FACTORS = [10., 10., 5.0, 5.0, 2.0]
+ROI_SCALE_FACTORS = [10., 10., 5.0, 5.0]
 ANCHOR_SCALE_FACTORS = None
 
 # --------------------------------------------FPN config
@@ -137,12 +136,12 @@ KEEP_PROB = 1.0
 SHOW_SCORE_THRSHOLD = 0.6  # only show in tensorboard
 
 SOFT_NMS = False
-FAST_RCNN_NMS_IOU_THRESHOLD = 0.0  # 0.5
-FAST_RCNN_NMS_MAX_BOXES_PER_CLASS = 1000
+FAST_RCNN_NMS_IOU_THRESHOLD = 0.5  # 0.6
+FAST_RCNN_NMS_MAX_BOXES_PER_CLASS = 100
 FAST_RCNN_IOU_POSITIVE_THRESHOLD = 0.5
 FAST_RCNN_IOU_NEGATIVE_THRESHOLD = 0.0   # 0.1 < IOU < 0.5 is negative
 FAST_RCNN_MINIBATCH_SIZE = 512  # if is -1, that is train with OHEM
-FAST_RCNN_POSITIVE_RATE = 0.4
+FAST_RCNN_POSITIVE_RATE = 0.25
 
 ADD_GTBOXES_TO_TRAIN = False
 

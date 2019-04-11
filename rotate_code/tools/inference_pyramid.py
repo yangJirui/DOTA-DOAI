@@ -23,6 +23,7 @@ from help_utils import tools
 from libs.box_utils import nms_wrapper
 from libs.box_utils import coordinate_convert
 from libs.configs import cfgs
+import time
 
 def get_file_paths_recursive(folder=None, file_ext=None):
     """ Get the absolute path of all files in given folder recursively
@@ -145,7 +146,6 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                             new_h, new_w = short_size,  min(int(short_size*float(w_len)/h_len), max_len)
                         else:
                             new_h, new_w = min(int(short_size*float(h_len)/w_len), max_len), short_size
-
                         img_resize = cv2.resize(src_img, (new_h, new_w))
 
                         det_boxes_r_, det_scores_r_, det_category_r_ = \
@@ -153,12 +153,18 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                                 [det_boxes_r, det_scores_r, det_category_r],
                                 feed_dict={img_plac: img_resize[:, :, ::-1]}
                             )
-                        det_boxes_r_ = forward_convert(det_boxes_r_, False)  # [x,y,w,h,theta]-->[x,y,x,y..,x,y]
-                        det_boxes_r_[:, 0::2] *= (w_len/new_w)
-                        det_boxes_r_[:, 1::2] *= (h_len/new_h)
-                        det_boxes_r_ = back_forward_convert(det_boxes_r_, False)
+
+                        valid = det_scores_r_ > 0.001
+                        det_boxes_r_ = det_boxes_r_[valid]
+                        det_scores_r_ = det_scores_r_[valid]
+                        det_category_r_ = det_category_r_[valid]
 
                         if len(det_boxes_r_) > 0:
+                            det_boxes_r_ = forward_convert(det_boxes_r_, False)  # [x,y,w,h,theta]-->[x,y,x,y..,x,y]
+                            det_boxes_r_[:, 0::2] *= (w_len/new_w)
+                            det_boxes_r_[:, 1::2] *= (h_len/new_h)
+                            det_boxes_r_ = back_forward_convert(det_boxes_r_, False)
+
                             for ii in range(len(det_boxes_r_)):
                                 box_rotate = det_boxes_r_[ii]
                                 box_rotate[0] = box_rotate[0] + ww_
@@ -177,10 +183,10 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
             #                'soccer-ball-field': 0.3, 'small-vehicle': 0.3, 'ship': 0.3, 'plane': 0.3,
             #                'large-vehicle': 0.3, 'helicopter': 0.3, 'harbor': 0.3, 'ground-track-field': 0.3,
             #                'bridge': 0.3, 'basketball-court': 0.3, 'baseball-diamond': 0.3}
-            r_threshold = {'roundabout': 0.1, 'tennis-court': 0.3, 'swimming-pool': 0.1, 'storage-tank': 0.2,
+            r_threshold = {'turntable': 0.1, 'tennis-court': 0.3, 'swimming-pool': 0.1, 'storage-tank': 0.2,
                            'soccer-ball-field': 0.3, 'small-vehicle': 0.2, 'ship': 0.05, 'plane': 0.3,
                            'large-vehicle': 0.1, 'helicopter': 0.2, 'harbor': 0.0001, 'ground-track-field': 0.3,
-                           'bridge': 0.0001, 'basketball-court': 0.3, 'baseball-diamond': 0.3}
+                           'bridge': 0.0001, 'basketball-court': 0.3, 'baseball-diamond': 0.3, 'container-crane': 0.3}
 
             for sub_class in range(1, cfgs.CLASS_NUM + 1):
                 index = np.where(label_res_rotate == sub_class)[0]
@@ -199,14 +205,14 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                     inx = nms_wrapper.nms_rotate_cpu(boxes=np.array(tmp_boxes_r),
                                                      scores=np.array(tmp_score_r),
                                                      iou_threshold=r_threshold[LABEl_NAME_MAP[sub_class]],
-                                                     max_output_size=500)
+                                                     max_output_size=5000)
                 except:
                     # Note: the IoU of two same rectangles is 0, which is calculated by rotate_gpu_nms
                     jitter = np.zeros([tmp_boxes_r.shape[0], tmp_boxes_r.shape[1] + 1])
                     jitter[:, 0] += np.random.rand(tmp_boxes_r.shape[0], ) / 1000
                     inx = nms_wrapper.nms_rotate_gpu(dets=np.array(tmp, np.float32) + np.array(jitter, np.float32),
                                                      iou_threshold=float(r_threshold[LABEl_NAME_MAP[sub_class]]),
-                                                     max_keep=500,
+                                                     max_keep=5000,
                                                      device_id=0)
 
                 box_res_rotate_.extend(np.array(tmp_boxes_r)[inx])
@@ -269,7 +275,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
 
 if __name__ == "__main__":
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
     file_paths = get_file_paths_recursive('/home/omnisky/DataSets/Dota/test/images/images', '.png')
     if cfgs.USE_CONCAT:
@@ -279,6 +285,6 @@ if __name__ == "__main__":
     else:
         det_net = build_whole_network.DetectionNetwork(base_network_name=cfgs.NET_NAME,
                                                        is_training=False)
-    inference(det_net, file_paths, '/home/omnisky/TF_Codes/semi_rotate/tools/demos', 800, 800,
-              200, 200, save_res=True)
+    inference(det_net, file_paths, './demos', 800, 800,
+              200, 200, save_res=False)
 

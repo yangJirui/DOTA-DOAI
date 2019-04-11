@@ -32,7 +32,7 @@ elif cfgs.DATASET_NAME == 'icdar':
         'back_ground': 0,
         'text': 1
     }
-elif cfgs.DATASET_NAME.startswith('DOTA'):
+elif cfgs.DATASET_NAME == 'DOTA':
     NAME_LABEL_MAP = {
         'back_ground': 0,
         'roundabout': 1,
@@ -50,6 +50,26 @@ elif cfgs.DATASET_NAME.startswith('DOTA'):
         'bridge': 13,
         'basketball-court': 14,
         'baseball-diamond': 15
+    }
+elif cfgs.DATASET_NAME == 'DOTA1.5':
+    NAME_LABEL_MAP = {
+        'back_ground': 0,
+        'turntable': 1,
+        'tennis-court': 2,
+        'swimming-pool': 3,
+        'storage-tank': 4,
+        'soccer-ball-field': 5,
+        'small-vehicle': 6,
+        'ship': 7,
+        'plane': 8,
+        'large-vehicle': 9,
+        'helicopter': 10,
+        'harbor': 11,
+        'ground-track-field': 12,
+        'bridge': 13,
+        'basketball-court': 14,
+        'baseball-diamond': 15,
+        'container-crane': 16
     }
 elif cfgs.DATASET_NAME == 'pascal':
     NAME_LABEL_MAP = {

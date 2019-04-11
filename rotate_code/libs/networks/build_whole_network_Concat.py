@@ -78,10 +78,10 @@ class DetectionNetwork(object):
                 # tmp_decoded_boxes = boxes_utils.clip_boxes_to_img_boundaries(decode_boxes=tmp_decoded_boxes,
                 #                                                              img_shape=img_shape)
 
-                r_threshold = {'roundabout': 0.3, 'tennis-court': 0.3, 'swimming-pool': 0.3, 'storage-tank': 0.2,
+                r_threshold = {'turntable': 0.3, 'tennis-court': 0.3, 'swimming-pool': 0.3, 'storage-tank': 0.2,
                                'soccer-ball-field': 0.3, 'small-vehicle': 0.3, 'ship': 0.1, 'plane': 0.3,
                                'large-vehicle': 0.15, 'helicopter': 0.3, 'harbor': 0.1, 'ground-track-field': 0.3,
-                               'bridge': 0.1, 'basketball-court': 0.3, 'baseball-diamond': 0.3}
+                               'bridge': 0.1, 'basketball-court': 0.3, 'baseball-diamond': 0.3, 'container-crane': 0.3}
                 # 3. NMS
                 if cfgs.SOFT_NMS:
                     print("Using Soft NMS.......")
@@ -117,7 +117,7 @@ class DetectionNetwork(object):
                 final_scores = tf.gather(final_scores, kept_indices)
                 final_category = tf.gather(final_category, kept_indices)
 
-        return final_boxes, final_scores, final_category
+            return final_boxes, final_scores, final_category
 
     def roi_pooling(self, feature_maps, rois, img_shape, scope):
         '''
@@ -188,12 +188,22 @@ class DetectionNetwork(object):
                                                  weights_initializer=cfgs.INITIALIZER,
                                                  activation_fn=None, trainable=self.is_training,
                                                  scope='cls_fc')
+                bbox_input_feat = pooled_features
+                for i in range(cfgs.ADD_EXTR_CONVS_FOR_REG):
+                    bbox_input_feat = slim.conv2d(bbox_input_feat, num_outputs=256, kernel_size=[3, 3], stride=1,
+                                                  padding="SAME", scope='extra_conv%d' % i)
+                bbox_input_fc_feat = slim.flatten(bbox_input_feat, scope='bbox_feat_flatten')
 
-                bbox_pred = slim.fully_connected(fc_flatten,
+                bbox_pred = slim.fully_connected(bbox_input_fc_feat,
                                                  num_outputs=(cfgs.CLASS_NUM + 1) * 5,
                                                  weights_initializer=cfgs.BBOX_INITIALIZER,
                                                  activation_fn=None, trainable=self.is_training,
                                                  scope='reg_fc')
+                # bbox_pred = slim.fully_connected(fc_flatten,
+                #                                  num_outputs=(cfgs.CLASS_NUM + 1) * 5,
+                #                                  weights_initializer=cfgs.BBOX_INITIALIZER,
+                #                                  activation_fn=None, trainable=self.is_training,
+                #                                  scope='reg_fc')
                 # for convient. It also produce (cls_num +1) bboxes
 
                 cls_score = tf.reshape(cls_score, [-1, cfgs.CLASS_NUM + 1])
@@ -247,12 +257,22 @@ class DetectionNetwork(object):
                                                  weights_initializer=cfgs.INITIALIZER,
                                                  activation_fn=None, trainable=self.is_training,
                                                  scope='cls_fc')
+                bbox_input_feat = pooled_features
+                for i in range(cfgs.ADD_EXTR_CONVS_FOR_REG):
+                    bbox_input_feat = slim.conv2d(bbox_input_feat, num_outputs=256, kernel_size=[3, 3], stride=1,
+                                                  padding="SAME", scope='extra_conv%d' % i)
+                bbox_input_fc_feat = slim.flatten(bbox_input_feat, scope='bbox_feat_flatten')
 
-                bbox_pred = slim.fully_connected(fc_flatten,
+                bbox_pred = slim.fully_connected(bbox_input_fc_feat,
                                                  num_outputs=(cfgs.CLASS_NUM + 1) * 5,
                                                  weights_initializer=cfgs.BBOX_INITIALIZER,
                                                  activation_fn=None, trainable=self.is_training,
                                                  scope='reg_fc')
+                # bbox_pred = slim.fully_connected(fc_flatten,
+                #                                  num_outputs=(cfgs.CLASS_NUM + 1) * 5,
+                #                                  weights_initializer=cfgs.BBOX_INITIALIZER,
+                #                                  activation_fn=None, trainable=self.is_training,
+                #                                  scope='reg_fc')
                 # for convient. It also produce (cls_num +1) bboxes
 
                 cls_score = tf.reshape(cls_score, [-1, cfgs.CLASS_NUM + 1])

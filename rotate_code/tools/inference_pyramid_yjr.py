@@ -23,6 +23,7 @@ from help_utils import tools
 from libs.box_utils import nms_wrapper
 from libs.box_utils import coordinate_convert
 from libs.configs import cfgs
+import time
 
 def get_file_paths_recursive(folder=None, file_ext=None):
     """ Get the absolute path of all files in given folder recursively
@@ -150,12 +151,15 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                             new_h, new_w = min(int(short_size*float(h_len)/w_len), max_len), short_size
 
                         img_resize = cv2.resize(src_img, (new_h, new_w))
-
+                        t1 = time.time()
                         det_boxes_r_, det_scores_r_, det_category_r_ = \
                             sess.run(
                                 [det_boxes_r, det_scores_r, det_category_r],
                                 feed_dict={img_plac: img_resize[:, :, ::-1]}
                             )
+                        t2 = time.time()
+                        print("img_size: {}, t1: {}, t2: {}, net_infer_time: {}".format((new_h, new_w), t1, t2, t2 - t1))
+
                         det_boxes_r_ = forward_convert(det_boxes_r_, False)  # [x,y,w,h,theta]-->[x,y,x,y..,x,y]
                         det_boxes_r_[:, 0::2] *= (w_len/new_w)
                         det_boxes_r_[:, 1::2] *= (h_len/new_h)
@@ -164,7 +168,6 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                         a_patch_box_res_rotate.append(det_boxes_r_)
                         a_patch_score_res_rotate.append(det_scores_r_)
                         a_patch_label_res_rotate.append(det_category_r_)
-
                     a_patch_box_res_rotate = np.concatenate(a_patch_box_res_rotate, axis=0)
                     a_patch_label_res_rotate = np.concatenate(a_patch_label_res_rotate, axis=0)
                     a_patch_score_res_rotate = np.concatenate(a_patch_score_res_rotate, axis=0)
@@ -173,7 +176,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                                    'soccer-ball-field': 0.3, 'small-vehicle': 0.3, 'ship': 0.1, 'plane': 0.3,
                                    'large-vehicle': 0.15, 'helicopter': 0.3, 'harbor': 0.1, 'ground-track-field': 0.3,
                                    'bridge': 0.1, 'basketball-court': 0.3, 'baseball-diamond': 0.3}
-
+                    t3 = time.time()
                     a_patch_box_after_nms = []
                     a_patch_score_after_nms = []
                     a_patch_label_after_nms = []
@@ -211,7 +214,8 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                     a_patch_box_after_nms = np.concatenate(a_patch_box_after_nms, axis=0)
                     a_patch_score_after_nms = np.concatenate(a_patch_score_after_nms, axis=0)
                     a_patch_label_after_nms = np.concatenate(a_patch_label_after_nms, axis=0)
-
+                    t4 = time.time()
+                    print("single_pathch, t3: {}, t4: {}, single_patch_nms_time:{}".format(t3, t4, t4-t3))
                     if len(a_patch_box_after_nms) > 0:
                         for ii in range(len(a_patch_box_after_nms)):
                             box_rotate = a_patch_box_after_nms[ii]
@@ -221,6 +225,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                             label_res_rotate.append(a_patch_label_after_nms[ii])
                             score_res_rotate.append(a_patch_score_after_nms[ii])
 
+            t5 = time.time()
             box_res_rotate = np.array(box_res_rotate)
             label_res_rotate = np.array(label_res_rotate)
             score_res_rotate = np.array(score_res_rotate)
@@ -267,7 +272,9 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                 score_res_rotate_.extend(np.array(tmp_score_r)[inx])
                 label_res_rotate_.extend(np.array(tmp_label_r)[inx])
             time_elapsed = timer() - start
-
+            t6 = time.time()
+            print("whole_size:{}, t5:{}, t6:{}, collect_patch_nms_time:{} ".format((imgH, imgW), t5, t6, t6-t5))
+            print (20*"-0000-")
             if save_res:
                 scores = np.array(score_res_rotate_)
                 labels = np.array(label_res_rotate_)
@@ -323,7 +330,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
 
 if __name__ == "__main__":
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+    os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
     file_paths = get_file_paths_recursive('/home/omnisky/DataSets/Dota/test/images/images', '.png')
     if cfgs.USE_CONCAT:
@@ -333,6 +340,6 @@ if __name__ == "__main__":
     else:
         det_net = build_whole_network.DetectionNetwork(base_network_name=cfgs.NET_NAME,
                                                        is_training=False)
-    inference(det_net, file_paths, '/home/omnisky/TF_Codes/semi_rotate/tools/demos', 800, 800,
+    inference(det_net, file_paths, './demos', 800, 800,
               200, 200, save_res=False)
 

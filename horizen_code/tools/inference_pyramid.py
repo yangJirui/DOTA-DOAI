@@ -117,7 +117,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
             imgW = img.shape[1]
             ori_H = imgH
             ori_W = imgW
-            print("  ori_h, ori_w: ", imgH, imgW)
+            # print("  ori_h, ori_w: ", imgH, imgW)
             if imgH < h_len:
                 temp = np.zeros([h_len, imgW, 3], np.float32)
                 temp[0:imgH, :, :] = img
@@ -219,7 +219,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                     inx = nms(np.array(tmp, np.float32),
                               h_threshold[LABEl_NAME_MAP[sub_class]])
 
-                inx = inx[:500]  # max_outpus is 500
+                # inx = inx[:500]  # max_outpus is 500
 
                 box_res_.extend(np.array(tmp_boxes_h)[inx])
                 score_res_.extend(np.array(tmp_score_h)[inx])
@@ -281,7 +281,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
 
 if __name__ == "__main__":
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+    os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
     file_paths = get_file_paths_recursive('/home/omnisky/DataSets/Dota/test/images/images', '.png')
     if cfgs.USE_CONCAT:

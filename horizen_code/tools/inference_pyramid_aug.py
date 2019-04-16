@@ -22,6 +22,76 @@ from help_utils import tools
 # from libs.box_utils import nms
 from libs.box_utils.cython_utils.cython_nms import nms, soft_nms
 from libs.configs import cfgs
+from libs.box_utils.cython_utils.cython_bbox import bbox_overlaps
+
+
+def flip_boxes_w(width, bboxes=None):
+    if bboxes is not None:
+        flip_bboxes = bboxes.copy()
+        flip_bboxes[:, 0] = width - bboxes[:, 2] - 1  # x
+        flip_bboxes[:, 2] = width - bboxes[:, 0] - 1  # x1
+        return flip_bboxes
+
+
+def flip_boxes_h(height, bboxes=None):
+    if bboxes is not None:
+        flip_bboxes = bboxes.copy()
+        flip_bboxes[:, 1] = height - bboxes[:, 3] - 1  # x
+        flip_bboxes[:, 3] = height - bboxes[:, 1] - 1  # x1
+        return flip_bboxes
+
+
+def box_voting(top_dets, all_dets, thresh, scoring_method='ID', beta=1.0):
+    """Apply bounding-box voting to refine `top_dets` by voting with `all_dets`.
+    See: https://arxiv.org/abs/1505.01749. Optional score averaging (not in the
+    referenced paper) can be applied by setting `scoring_method` appropriately.
+    """
+    # top_dets is [N, 5] each row is [x1 y1 x2 y2, score]
+    # all_dets is [N, 5] each row is [x1 y1 x2 y2, score]
+    top_dets_out = top_dets.copy()
+    top_boxes = top_dets[:, :4].astype(np.float)
+    all_boxes = all_dets[:, :4].astype(np.float)
+    all_scores = all_dets[:, 4]
+    top_to_all_overlaps = bbox_overlaps(top_boxes, all_boxes)
+    for k in range(top_dets_out.shape[0]):
+        inds_to_vote = np.where(top_to_all_overlaps[k] >= thresh)[0]
+        boxes_to_vote = all_boxes[inds_to_vote, :]
+        ws = all_scores[inds_to_vote]
+        top_dets_out[k, :4] = np.average(boxes_to_vote, axis=0, weights=ws)
+        if scoring_method == 'ID':
+            # Identity, nothing to do
+            pass
+        elif scoring_method == 'TEMP_AVG':
+            # Average probabilities (considered as P(detected class) vs.
+            # P(not the detected class)) after smoothing with a temperature
+            # hyperparameter.
+            P = np.vstack((ws, 1.0 - ws))
+            P_max = np.max(P, axis=0)
+            X = np.log(P / P_max)
+            X_exp = np.exp(X / beta)
+            P_temp = X_exp / np.sum(X_exp, axis=0)
+            P_avg = P_temp[0].mean()
+            top_dets_out[k, 4] = P_avg
+        elif scoring_method == 'AVG':
+            # Combine new probs from overlapping boxes
+            top_dets_out[k, 4] = ws.mean()
+        elif scoring_method == 'IOU_AVG':
+            P = ws
+            ws = top_to_all_overlaps[k, inds_to_vote]
+            P_avg = np.average(P, weights=ws)
+            top_dets_out[k, 4] = P_avg
+        elif scoring_method == 'GENERALIZED_AVG':
+            P_avg = np.mean(ws**beta)**(1.0 / beta)
+            top_dets_out[k, 4] = P_avg
+        elif scoring_method == 'QUASI_SUM':
+            top_dets_out[k, 4] = ws.sum() / float(len(ws))**beta
+        else:
+            raise NotImplementedError(
+                'Unknown scoring method {}'.format(scoring_method)
+            )
+
+    return top_dets_out
+
 
 def get_file_paths_recursive(folder=None, file_ext=None):
     """ Get the absolute path of all files in given folder recursively
@@ -55,7 +125,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
     #     assert cfgs.SHOW_SCORE_THRSHOLD < 0.005, \
     #         'please set score threshold (example: SHOW_SCORE_THRSHOLD = 0.00) in cfgs.py'
     # TMP_FILE = './tmp_concat.txt' if cfgs.USE_CONCAT else './tmp.txt'
-    TMP_FILE = './tmp_%s.txt' % cfgs.VERSION
+    TMP_FILE = './tmp1_%s.txt' % cfgs.VERSION
 
     # 1. preprocess img
     img_plac = tf.placeholder(dtype=tf.uint8, shape=[None, None, 3])
@@ -87,7 +157,6 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
 
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
-    print('yjr filter box with score 1e-4 ***************')
     with tf.Session(config=config) as sess:
         sess.run(init_op)
         if not restorer is None:
@@ -180,6 +249,61 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                                 label_res.append(det_category_h_[ii])
                                 score_res.append(det_scores_h_[ii])
 
+                        img_resize_flip = cv2.flip(img_resize, 1)
+                        det_boxes_h_flip_, det_scores_h_flip_, det_category_h_flip_ = \
+                            sess.run(
+                                [det_boxes_h, det_scores_h, det_category_h],
+                                feed_dict={img_plac: img_resize_flip[:, :, ::-1]}
+                            )
+                        det_boxes_h_flip_ = flip_boxes_w(new_w, det_boxes_h_flip_)
+                        valid = det_scores_h_flip_ > 0.001
+                        det_boxes_h_flip_ = det_boxes_h_flip_[valid]
+                        det_scores_h_flip_ = det_scores_h_flip_[valid]
+                        det_category_h_flip_ = det_category_h_flip_[valid]
+                        # ---------
+                        det_boxes_h_flip_[:, 0] = det_boxes_h_flip_[:, 0] * w_len / new_w
+                        det_boxes_h_flip_[:, 1] = det_boxes_h_flip_[:, 1] * h_len / new_h
+                        det_boxes_h_flip_[:, 2] = det_boxes_h_flip_[:, 2] * w_len / new_w
+                        det_boxes_h_flip_[:, 3] = det_boxes_h_flip_[:, 3] * h_len / new_h
+
+                        if len(det_boxes_h_flip_) > 0:
+                            for ii in range(len(det_boxes_h_flip_)):
+                                box = det_boxes_h_flip_[ii]
+                                box[0] = box[0] + ww_
+                                box[1] = box[1] + hh_
+                                box[2] = box[2] + ww_
+                                box[3] = box[3] + hh_
+                                box_res.append(box)
+                                label_res.append(det_category_h_flip_[ii])
+                                score_res.append(det_scores_h_flip_[ii])
+            img_resize_flip = cv2.flip(img_resize, 0)
+            det_boxes_h_flip_, det_scores_h_flip_, det_category_h_flip_ = \
+                sess.run(
+                    [det_boxes_h, det_scores_h, det_category_h],
+                    feed_dict={img_plac: img_resize_flip[:, :, ::-1]}
+                )
+            det_boxes_h_flip_ = flip_boxes_h(new_h, det_boxes_h_flip_)
+            valid = det_scores_h_flip_ > 0.001
+            det_boxes_h_flip_ = det_boxes_h_flip_[valid]
+            det_scores_h_flip_ = det_scores_h_flip_[valid]
+            det_category_h_flip_ = det_category_h_flip_[valid]
+            # ---------
+            det_boxes_h_flip_[:, 0] = det_boxes_h_flip_[:, 0] * w_len / new_w
+            det_boxes_h_flip_[:, 1] = det_boxes_h_flip_[:, 1] * h_len / new_h
+            det_boxes_h_flip_[:, 2] = det_boxes_h_flip_[:, 2] * w_len / new_w
+            det_boxes_h_flip_[:, 3] = det_boxes_h_flip_[:, 3] * h_len / new_h
+
+            if len(det_boxes_h_flip_) > 0:
+                for ii in range(len(det_boxes_h_flip_)):
+                    box = det_boxes_h_flip_[ii]
+                    box[0] = box[0] + ww_
+                    box[1] = box[1] + hh_
+                    box[2] = box[2] + ww_
+                    box[3] = box[3] + hh_
+                    box_res.append(box)
+                    label_res.append(det_category_h_flip_[ii])
+                    score_res.append(det_scores_h_flip_[ii])
+
             box_res = np.array(box_res)
             label_res = np.array(label_res)
             score_res = np.array(score_res)
@@ -220,11 +344,13 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
                               h_threshold[LABEl_NAME_MAP[sub_class]])
 
                 # inx = inx[:500]  # max_outpus is 500
-
-                box_res_.extend(np.array(tmp_boxes_h)[inx])
-                score_res_.extend(np.array(tmp_score_h)[inx])
-                label_res_.extend(np.array(tmp_label_h)[inx])
-
+                box_vote = box_voting(tmp[inx], tmp, thresh=0.9, scoring_method='ID')
+                box_res_.append(box_vote[:, 0:-1])
+                score_res_.append(box_vote[:, -1])
+                label_res_.append(np.ones_like(box_vote[:, -1]) * sub_class)
+            box_res_ = np.concatenate(box_res_, axis=0)
+            score_res_ = np.concatenate(score_res_, axis=0)
+            label_res_ = np.concatenate(label_res_, axis=0)
             time_elapsed = timer() - start
 
             if save_res:
@@ -254,7 +380,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
 
                 # Task2
                 write_handle_h = {}
-                txt_dir_h = os.path.join('txt_output', cfgs.VERSION + '_h')
+                txt_dir_h = os.path.join('txt_output', cfgs.VERSION + '_flip_voting_h')
                 tools.mkdir(txt_dir_h)
                 for sub_class in CLASS_DOTA:
                     if sub_class == 'back_ground':
@@ -291,6 +417,6 @@ if __name__ == "__main__":
     else:
         det_net = build_whole_network.DetectionNetwork(base_network_name=cfgs.NET_NAME,
                                                        is_training=False)
-    inference(det_net, file_paths, '/home/omnisky/TF_Codes/horizen_code/tools/demos', 800, 800,
+    inference(det_net, file_paths, './demos', 800, 800,
               200, 200, save_res=False)
 

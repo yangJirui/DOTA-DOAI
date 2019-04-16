@@ -55,7 +55,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
     #     assert cfgs.SHOW_SCORE_THRSHOLD < 0.005, \
     #         'please set score threshold (example: SHOW_SCORE_THRSHOLD = 0.00) in cfgs.py'
     # TMP_FILE = './tmp_concat.txt' if cfgs.USE_CONCAT else './tmp.txt'
-    TMP_FILE = './tmp_%s.txt' % cfgs.VERSION
+    TMP_FILE = './tmp1_%s.txt' % cfgs.VERSION
 
     # 1. preprocess img
     img_plac = tf.placeholder(dtype=tf.uint8, shape=[None, None, 3])
@@ -254,7 +254,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
 
                 # Task2
                 write_handle_h = {}
-                txt_dir_h = os.path.join('txt_output', cfgs.VERSION + '_h')
+                txt_dir_h = os.path.join('txt_output', cfgs.VERSION + '_h_74w')
                 tools.mkdir(txt_dir_h)
                 for sub_class in CLASS_DOTA:
                     if sub_class == 'back_ground':
@@ -281,7 +281,7 @@ def inference(det_net, file_paths, des_folder, h_len, w_len, h_overlap, w_overla
 
 if __name__ == "__main__":
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
     file_paths = get_file_paths_recursive('/home/omnisky/DataSets/Dota/test/images/images', '.png')
     if cfgs.USE_CONCAT:
